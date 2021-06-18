@@ -1,0 +1,48 @@
+/*
+
+Author : Suraj Verma
+
+LeetCode June Challenge ( Week 3, 16th June )
+Problem Statement : Generate Parenthesis
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+Approach : Using Recurssion and Backtracking
+our goal is to all valid parenthesis,
+so what we can do is we can generate all the possible parenthesis and then check for the 
+balance ones, but this will take 2n*O(2^2n)
+so, to reduce the time complexity to O(2^2n) we can use backtracking here.
+we can define the choices on the basis of some constraints
+which we can directly identity after making the recurssion tree diagram.
+
+*/
+
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> list = new ArrayList<>();
+        int open = n;
+        int close = n;
+        generateParenthesis(open,close,n,new StringBuilder(),list);
+        return list;
+    }
+    
+    public static void generateParenthesis(int open, int close,int n, StringBuilder current, List<String> list){
+        //goal
+        if(open == 0 && close == 0 && current.length() == 2*n){
+            list.add(new String(current));
+            return;
+        }
+        //choices according to constraints
+        if(open != 0){
+            current.append("(");
+            generateParenthesis(open-1,close,n,current,list);
+	    //backtrack
+            current.deleteCharAt(current.length()-1);
+        }
+        if(open < close){
+            current.append(")");
+            generateParenthesis(open,close-1,n,current,list);
+	    //backtrack
+            current.deleteCharAt(current.length()-1);
+        }
+    }
+}
