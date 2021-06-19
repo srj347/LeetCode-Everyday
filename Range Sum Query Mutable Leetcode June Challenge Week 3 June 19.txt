@@ -1,0 +1,134 @@
+/*
+
+Author : Suraj Verma
+
+LeetCode June Challenge, Week 3(18th June)
+
+Problem Link : https://leetcode.com/explore/challenge/card/june-leetcoding-challenge-2021/605/week-3-june-15th-june-21st/3783/
+Problem Statement : Range Sum Query - Mutable
+Given an integer array nums, handle multiple queries of the following types:
+
+Update the value of an element in nums.
+Calculate the sum of the elements of nums between indices left and right inclusive where left <= right
+
+Input
+["NumArray", "sumRange", "update", "sumRange"]
+[[[1, 3, 5]], [0, 2], [1, 2], [0, 2]]
+Output
+[null, 9, null, 8]
+
+Explanation
+NumArray numArray = new NumArray([1, 3, 5]);
+numArray.sumRange(0, 2); // return 1 + 3 + 5 = 9
+numArray.update(1, 2);   // nums = [1, 2, 5]
+numArray.sumRange(0, 2); // return 1 + 2 + 5 = 8
+
+Approach : Segment Tree with Point Update
+at first we can think of a naive approach by applying loop from [l,r] and calculate the required sum.
+but at the worst case this will take O(N) for each query operation and it will give us TLE.
+so next we might think of prefix sum approch, but since here we need to do point update, therefore
+update operation will take O(N), since we need to again compute the prefix sum array from [l,r].
+therefore optimizing it further we can use the concept of Segment Tree Data Structure.
+so by this we can perform each query and update operations in O(logN).
+
+*/
+
+class NumArray {
+
+    SegmentTreeSum st = null;
+    public NumArray(int[] nums) {
+        st = new SegmentTreeSum(nums);
+    }
+    
+    public void update(int index, int val) {
+        st.pointUpdate(index,val);
+    }
+    
+    public int sumRange(int left, int right) {
+        return st.querySum(left,right);
+    }
+    
+    
+    public class SegmentTreeSum{
+
+    private Node root;
+
+    //SegmentTree is Constructed in O(n) time and then we can perform the queries in O(logn)
+    public SegmentTreeSum(int[] arr) {
+        root = constructTree(arr,0,arr.length-1);
+    }
+
+    private Node constructTree(int[] arr, int s, int e) {
+        if(s == e){
+            Node leafNode = new Node(s,e);
+            leafNode.data = arr[s];
+            return leafNode;
+        }
+        Node node = new Node(s,e);
+        int mid = s+(e-s)/2;
+        node.left = constructTree(arr,s,mid);
+        node.right = constructTree(arr,mid+1,e);
+
+        node.data = node.left.data + node.right.data;
+        return node;
+    }
+
+
+
+    public int querySum(int qsi,int qei){
+        return query(root,qsi,qei);
+    }
+    private int query(Node node, int qsi, int qei) {
+        //node completely lies inside the query
+        //and it completely contributes its value
+        // so we dont need to go down further
+        if(node.si >= qsi && node.ei <= qei){
+            return node.data;
+        }
+        //node completely lies outside the query
+        //and it contributes nothing and return default value.
+        else if(node.si > qei || node.ei < qsi){
+            return 0;
+        }
+        //partial inside and partial outside case (partial overlap case)
+        else{
+            int leftans = query(node.left,qsi,qei);
+            int rightans = query(node.right,qsi,qei);
+            return leftans+rightans;
+        }
+    }
+
+    public void pointUpdate(int index,int newValue){
+        root.data = pointUpdate(root,index,newValue);
+    }
+    private int pointUpdate(Node node, int index, int newValue) {
+        if (index >= node.si && index <= node.ei) {
+            if (index == node.si && index == node.ei) {
+                node.data = newValue;
+            } else {
+                int leftValue = pointUpdate(node.left, index, newValue);
+                int rightValue = pointUpdate(node.right, index, newValue);
+                node.data = leftValue+rightValue;
+            }
+        }
+        return node.data;
+    }
+
+    private class Node{
+        private int data;
+        private int si,ei;
+        private Node left,right;
+
+        public Node(int s,int e){
+            this.si = s;
+            this.ei = e;
+            this.left = null;
+            this.right = null;
+            this.data = 0;
+        }
+    }
+}
+
+    
+    
+}
