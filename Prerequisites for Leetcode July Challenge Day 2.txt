@@ -1,0 +1,40 @@
+/*
+
+Author : Suraj Verma
+< Indirectly Prerequisites for LeetCode July Challenge Day 2 "Max Sum of Rectangle No Larger Than K" >
+Problem Statement : Subarray Sum Equals K
+Problem link : https://leetcode.com/problems/subarray-sum-equals-k/
+
+Given an array of integers nums and an integer k, return the total number of continuous subarrays whose sum equals to k.
+Example :
+Input: nums = [1,1,1], k = 2
+Output: 2
+
+Approach : 
+we can use here the brute force approach by iterating over all the subarray and storing the sum
+and if it is equal to K then increment the count, but this will take O(n^2), 
+so here we can use a small trick, we will store the prefix sum upto ith index and we will maintain a
+hashmap will stores the <sum,freq> and we will check, if there exist a value in the hashmap 
+for prefixsum - k , and if it is then we will add its freq to our global counter variable 
+and we will keep incrementing the freq of the current prefix sum
+
+*/
+
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        //default case
+        Map<Integer,Integer> freq = new HashMap<>();
+        freq.put(0,1);
+
+        int prefixSum = 0;
+        int count = 0;
+        for(int i=0;i<nums.length;i++){
+            prefixSum += nums[i];
+            if(freq.containsKey(prefixSum-k)){
+                count += freq.get(prefixSum-k);
+            }
+            freq.put(prefixSum,freq.getOrDefault(prefixSum,0)+1);
+        }
+        return count;
+    }
+}
