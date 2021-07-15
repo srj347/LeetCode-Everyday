@@ -1,0 +1,42 @@
+/*
+
+Author : Suraj Verma
+
+Leetcode July Challenge Day 15
+Problem Statement - Valid Triangle Number
+Problem link - https://leetcode.com/explore/challenge/card/july-leetcoding-challenge-2021/610/week-3-july-15th-july-21st/3815/
+
+Approach -
+In this problem since n<1000 therefore the brute force solution O(n^3) will not work, so what we can do is we can sort the array and then 
+apply the concept of two pointer algorithm.
+
+yaha par ham ek element ko fix krke do elements ko vary krwaenge, lets call them left and right where right pointer will be i-1.
+where 'i' is the fix element. ab agar left element + right element > hai ith element se then it means that left se right tak har ek element
+right aur i ka combination answer me count hoga.
+
+// My Leetcode Submission
+class Solution {
+    public int triangleNumber(int[] nums) {
+        if(nums.length < 3){
+            return 0;
+        }
+        Arrays.sort(nums);
+        
+        int count = 0;
+        for(int i=2;i<nums.length;i++){
+            int l = 0;
+            int r = i-1;
+            while(l<r){
+                if(nums[l]+nums[r] > nums[i]){
+                    count += (r-l);
+                    r--;
+                }else{
+                    l++;
+                }
+            }
+        }
+        return count;    
+    }
+}
+
+*/
