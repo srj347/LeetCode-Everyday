@@ -1,0 +1,49 @@
+
+/*
+Author : Suraj Verma
+Problem link - https://leetcode.com/problems/consecutive-numbers-sum/
+*/
+
+
+// By using Sliding Window which will take O(N*N)
+class Solution {
+    public int consecutiveNumbersSum(int n) {
+        int count = 0;
+        for(int k=2; k<n; k++){
+            int i=1,j=1;
+            int sum = 0;
+            while(j<=n){
+                sum += j;
+                if(j-i+1 < k){
+                    j++;
+                }else if(j-i+1 == k){
+                    if(sum == n){
+                        count++;
+                    }
+                    sum -= i;
+                    i++;
+                    j++;
+                }
+            }
+        }
+        return count+1;
+    }
+}
+
+// efficient solution using some mathematic
+https://leetcode.com/problems/consecutive-numbers-sum/discuss/1117669/Mathematical-Solution
+
+class Solution {
+    public int consecutiveNumbersSum(int n) {
+        int count = 0;
+        int k = 2;
+        while(k < Math.sqrt(2*n)){
+            if((n-(k*(k-1)/2))%k == 0){
+                count++;
+            }
+            k++;
+        }
+        return count+1;
+    }
+}
+
