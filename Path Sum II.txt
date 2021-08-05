@@ -1,0 +1,30 @@
+/*
+Author : Suraj Verma
+Problem : Path Sum II
+link : https://leetcode.com/problems/path-sum-ii/
+*/
+
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<Integer> path = new ArrayList<>();
+        solve(root,0,path,targetSum);
+        return result;
+    }
+    
+    public void solve(TreeNode root, int currSum, List<Integer> path, int targetSum){
+        if(root == null){
+            return;
+        }
+        currSum += root.val;
+        path.add(root.val);
+        
+        if(currSum == targetSum && root.right == null && root.left == null){
+            result.add(new ArrayList<>(path));
+        }
+        
+        solve(root.left, currSum, path, targetSum);
+        solve(root.right, currSum, path, targetSum);
+        path.remove(path.size()-1);
+    }
+}

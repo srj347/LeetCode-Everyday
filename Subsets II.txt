@@ -1,0 +1,28 @@
+/*
+Author : Suraj Verma
+Problem : Subsets II
+link : https://leetcode.com/explore/challenge/card/august-leetcoding-challenge-2021/613/week-1-august-1st-august-7th/3837/
+*/
+
+class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        Set<List<Integer>> result = new HashSet<>();
+        solve(0,nums,new ArrayList<>(),result);
+        
+        List<List<Integer>> answer = new ArrayList<>(result);
+        return answer;
+    }
+    
+    public void solve(int i, int[] nums, ArrayList<Integer> subset, Set<List<Integer>> result){
+        if(i == nums.length){
+            result.add(new ArrayList<>(subset));
+            return;
+        }
+
+        solve(i+1,nums,subset,result);
+        subset.add(nums[i]);
+        solve(i+1,nums,subset,result);
+        subset.remove(subset.size()-1);
+    }
+}
